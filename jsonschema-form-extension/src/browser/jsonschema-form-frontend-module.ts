@@ -3,11 +3,12 @@ import {
     CommandContribution,
     MenuContribution
 } from "@theia/core/lib/common";
-import { OpenHandler, WidgetFactory } from "@theia/core/lib/browser";
+import { OpenHandler, WidgetFactory, WebSocketConnectionProvider } from "@theia/core/lib/browser";
 import { ContainerModule } from "inversify";
 import { JsonschemaFormWidget, JsonschemaFormWidgetOptions } from './jsonschema-form-widget';
 import { JsonschemaFormOpenHandler } from './jsonschema-form-open-handler';
 import { KeybindingContribution } from "@theia/core/lib/browser";
+import { ListFilesService, ListFilesServicePath } from '../common/list-files';
 
 export default new ContainerModule(bind => {
     // add your contribution bindings here
@@ -17,6 +18,7 @@ export default new ContainerModule(bind => {
     bind(CommandContribution).to(ListFilesCommandContribution).inSingletonScope();
     bind(MenuContribution).to(ListFilesMenuContribution).inSingletonScope();
     bind(KeybindingContribution).to(ListFilesKeybindingContribution).inSingletonScope();
+    bind(ListFilesService).toDynamicValue(context => WebSocketConnectionProvider.createProxy(context.container, ListFilesServicePath)).inSingletonScope();
     
 
     bind(OpenHandler).to(JsonschemaFormOpenHandler).inSingletonScope();

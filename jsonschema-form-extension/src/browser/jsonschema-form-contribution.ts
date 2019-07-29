@@ -2,6 +2,7 @@ import { injectable, inject } from "inversify";
 import { CommandContribution, CommandRegistry, MenuContribution, MenuModelRegistry, MessageService, SelectionService } from "@theia/core/lib/common";
 import { CommonMenus, KeybindingContribution, KeybindingRegistry } from "@theia/core/lib/browser";
 import { UriAwareCommandHandler } from "@theia/core/lib/common/uri-command-handler";
+import { ListFilesService } from '../common/list-files';
 
 export const JsonschemaFormCommand = {
     id: 'JsonschemaForm.command',
@@ -46,9 +47,14 @@ export class ListFilesCommandContribution implements CommandContribution {
     
     @inject(SelectionService) private readonly selectionService: SelectionService
 
+    @inject(ListFilesService) private readonly listFileService: ListFilesService
+    
     registerCommands(registry: CommandRegistry): void {
         registry.registerCommand(ListFilesCommand, new UriAwareCommandHandler(this.selectionService, {
-            execute: uri => this.messageService.info(`Listing Files in ${uri}`)
+            execute: async uri => {
+                const files = await this.listFileService.listFiles(uri.toString());
+                this.messageService.info(files.join('\n'));
+            }
         } ));            
     }
 }
