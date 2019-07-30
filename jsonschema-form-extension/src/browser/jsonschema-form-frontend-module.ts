@@ -9,6 +9,8 @@ import { JsonschemaFormWidget, JsonschemaFormWidgetOptions } from './jsonschema-
 import { JsonschemaFormOpenHandler } from './jsonschema-form-open-handler';
 import { KeybindingContribution } from "@theia/core/lib/browser";
 import { ListFilesService, ListFilesServicePath } from '../common/list-files';
+import { ListFilesWidget } from './listfiles-widget';
+require('../../src/browser/style/list-files.css')
 
 export default new ContainerModule(bind => {
     // add your contribution bindings here
@@ -31,4 +33,13 @@ export default new ContainerModule(bind => {
             return child.get(JsonschemaFormWidget);
         }
     }));
+
+    bind(WidgetFactory).toDynamicValue(({ container }) => ({
+        id: ListFilesWidget.id,
+        createWidget: () => {
+            const child = container.createChild();
+            child.bind(ListFilesWidget).toSelf();
+            return child.get(ListFilesWidget);
+        }
+    }))
 });
