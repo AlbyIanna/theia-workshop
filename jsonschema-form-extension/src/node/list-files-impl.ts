@@ -8,7 +8,6 @@ import URI from "@theia/core/lib/common/uri";
 export class ListFilesServiceImpl implements ListFilesService{
   listFiles(uri: string): Promise<string[]> {
     const dir = new URI(uri).path.toString();
-    console.log(`================${dir}`);
     let isDirExists = fs.existsSync(dir) && fs.lstatSync(dir).isDirectory();
     return new Promise((resolve, reject) => {
       if (!isDirExists) {

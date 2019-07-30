@@ -47,14 +47,14 @@ export class ListFilesCommandContribution implements CommandContribution {
     ) { }
     
     @inject(SelectionService) private readonly selectionService: SelectionService
-    @inject(ListFilesService) private readonly listFileService: ListFilesService
+    @inject(ListFilesService) private readonly listFilesService: ListFilesService
     @inject(WidgetManager) private readonly widgetManager: WidgetManager
     @inject(ApplicationShell) private readonly applicationShell : ApplicationShell
     
     registerCommands(registry: CommandRegistry): void {
         registry.registerCommand(ListFilesCommand, new UriAwareCommandHandler(this.selectionService, {
             execute: async uri => {
-                const files = await this.listFileService.listFiles(uri.toString());
+                const files = await this.listFilesService.listFiles(uri.toString());
                 // this.messageService.info(files.join('\n'));
                 const widget = await this.widgetManager.getOrCreateWidget<ListFilesWidget>(ListFilesWidget.id);
                 if (!widget.isAttached) {
